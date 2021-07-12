@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!--all product-->
+  <div class="container" style="padding: 5rem 0;">
+    <div class="heading_container">
+      <h2>
+        Category: 
+      </h2>
+    </div>
+    <br>
+    <div class="row">
+      {% for item in products %}
+      <div class="col-md-3"> <!-- Card -->
+        <div class="card mb-4">
+          <div class="view overlay">
+            {% for img in item.productsimage_set.all %}
+              {% if img.active %}
+                <img src="{{ img.image.url }}" alt="" class="card-img-top m-2" height="200">
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="card-body">
+            <!-- Title -->
+            <h5 class="card-title">{{ item.title }}</h5>
+            <!-- Text -->
+            {% if item.discount_price %}
+              <p class="product-price">Ghc {{ item.discount_price }}  <del>Ghc {{ item.price }}</del></p>
+            {% else %}
+              <p class="product-price">Ghc {{ item.price }}</p>
+            {% endif %}
+            <!-- Button -->
+            <a href="{% url 'detail' item.slug %}" class="btn btn-danger">View</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

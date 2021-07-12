@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container" style="padding: 5rem 0;">
+        <div class="heading_container">
+            <h2>
+              Cart
+            </h2>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-12"> 
+                <div class="shop__cart__table">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td class="cart__product__item">
+                                    {% for img in item.products.productsimage_set.all %}
+                                        {% if img.active %}
+                                        <img src="{{ img.image.url }}" alt="" width="100px">
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="cart__product__item__title">
+                                        <h6>{{ item.products.title }}</h6>
+                                    </div>
+                                </td>
+                                {% if item.products.discount_price %}
+                                    <td class="cart__price">GHC {{ item.products.discount_price }}</td>
+                                {% else %}
+                                    <td class="cart__price">GHC {{ item.products.price }}</td>
+                                {% endif %}
+                                <td class="text-center" style="font-size:20px;">{{ item.quantity }}</td>
+                                <td class="cart__amount">GHC {{ item.total }}</td>
+                            </tr> 
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+          </div>
+    </div>
+  {% endblock%}
