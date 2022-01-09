@@ -11,17 +11,18 @@ def home(request):
         'products': products, 
         'adproducts': adproducts,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'store/index.html', context)
 
 
 
 def ProductDetail(request, slug):
     product = Product.objects.get(slug=slug)
-    # related = Product.objects.select_related('title')[0:6]
+    related = Product.objects.filter(category__title__contains=product.category)
     context = {
         'product': product,
+        'related': related,
     }
-    return render(request, 'singleproduct.html', context)
+    return render(request, 'store/singleproduct.html', context)
 
 
 
@@ -29,7 +30,7 @@ def store(request):
     context = {
         'items': Product.objects.all().order_by('-id')
     }
-    return render(request, 'product.html', context)
+    return render(request, 'store/product.html', context)
 
 
 
@@ -38,7 +39,8 @@ def category(request, title):
     context = {
         'products': products
     }
-    return render(request, 'category.html', context)
+    return render(request, 'store/category.html', context)
+
 
 
 def search(request):
@@ -49,7 +51,7 @@ def search(request):
     if q:
         products = Product.objects.filter(title__icontains=q)
         context = {'query': q, 'products': products}
-        return render(request, 'search.html', context)
+        return render(request, 'store/search.html', context)
     else:
         context={}   
         return redirect('/')

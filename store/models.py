@@ -1,5 +1,7 @@
 from django.db import models
 
+from authentication.models import User
+
 class ProductCategory(models.Model):
     title = models.CharField(max_length=250)
     image = models.ImageField(upload_to='images/products', null=True , blank=True)
@@ -11,8 +13,8 @@ class ProductCategory(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
-    price = models.DecimalField(decimal_places=2, max_digits=60, blank=True, null=True)
-    discount_price = models.DecimalField(decimal_places=2, max_digits=60, blank=True, null=True)
+    price = models.DecimalField(decimal_places=2, max_digits=60, default=0.0, blank=True, null=True)
+    discount_price = models.DecimalField(decimal_places=2, max_digits=60, default=0.0, blank=True, null=True)
     category = models.ManyToManyField('ProductCategory', default='uncategorize', related_name='productcategory')
     created_on = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
@@ -37,16 +39,6 @@ class ProductsImage(models.Model):
         return self.product_id.title
 
 
-class ProductReview(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    name =  models.CharField(max_length=250, null=False, blank=False)
-    email =  models.CharField(max_length=250, null=False, blank=False)
-    message =  models.TextField(null=False, blank=False)
-    date =  models.DateTimeField(auto_now_add=True, auto_now=False)
-
-    def __str__(self):
-        return self.name + "  |  " + str(self.product_id.title)
-
 
 class VariationManager(models.Model):
     def all(self):
@@ -57,6 +49,9 @@ class VariationManager(models.Model):
 
     def colors(self):
         return self.all().filter(category='color')
+    
+    def packages(self):
+        return self.all().filter(category='package')
 
 
 VAR_CATEGORY = (
@@ -78,3 +73,19 @@ class Variation(models.Model):
 
     def __str__(self):
         return self.product_id.title
+
+
+RATE_CHOICES = (
+    zip(range(1,6), range(1,6))
+)
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    text = models.TextField(null=True, blank=True)
+    like = models.BooleanField(default=False)
+    rate = models.PositiveSmallIntegerField(choices=RATE_CHOICES)
+    created_on = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    def __str__(self):
+        return "Review id %s" %(self.user.name)

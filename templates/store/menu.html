@@ -1,0 +1,40 @@
+{% load static %}
+{% load cart_template_tags %}
+<div class="container">
+    <div class="hamburger-menu">
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+    </div>
+</div>
+<section class="sidebar">
+    <ul class="menu">
+        <li class="menu-item">
+            <a href="/" class="menu-link" data-content="Home">Home</a>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'store' %}" class="menu-link" data-content="Products">Products</a>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'cart' %}" class="menu-link" data-content="Cart">Cart<span class="badge badge-light">{{ request.user|cart_item_count }}</span></a>
+        </li>
+        {% if user.is_authenticated %}
+            <li class="menu-item">
+                <a href="{% url 'profile' %}" class="menu-link" data-content="Blog">Profile</a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'logout' %}" class="menu-link" data-content="Blog">logout</a>
+            </li>
+        {% else %}
+            <li class="menu-item">
+                <a href="{% url 'login' %}" class="menu-link" data-content="Blog">Login/Register</a>
+            </li>
+        {% endif %}
+        
+    </ul>
+    <div class="social-media">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+</section>

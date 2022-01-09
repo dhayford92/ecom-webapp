@@ -1,0 +1,81 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container" style="padding: 5rem 0;">
+        <div class="heading_container">
+            <h2>
+              Cart
+            </h2>
+        </div>           
+        <br>
+          {% if empty %}
+            <h1>{{ empty_message }}</h1>
+            <a href="{% url 'store' %}" class="btn btn-black btn-outline-black float-right ml-2 rounded-1">Start shopping</a>
+          {% else %}
+            <div class="row">
+                <div class="col-lg-12"> 
+                    <div class="shop__cart__table">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Sub Total</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {% for product in cart %}
+                                    <tr>
+                                        <td class="cart__product__item">
+                                            {% for img in product.item.productsimage_set.all %}
+                                                {% if img.active %}
+                                                <img src="{{ img.image.url }}" alt="" width="100px">
+                                                {% endif %}
+                                            {% endfor %}
+                                            <div class="cart__product__item__title">
+                                                <h6>{{ product.item.title }}</h6>
+                                            </div>
+                                        </td>
+                                        {% if product.item.discount_price %}
+                                            <td class="cart__price">GHC {{ product.item.discount_price }}</td>
+                                        {% else %}
+                                            <td class="cart__price">GHC {{ product.item.price }}</td>
+                                        {% endif %}
+                                        <td class="text-center" style="font-size:20px;">
+                                            <a href="{% url 'remove_from_cart' product.item.slug %}"><i class="fas fa-minus mr-2"></i></a>
+                                            {{ product.quantity }}
+                                            <a href="{% url 'add_cart' product.item.slug %}"><i class="fas fa-plus mr-2"></i></a>
+                                        </td>
+                                        {% if product.item.discount_price %}
+                                            <td class="cart__amount" style="font-size:15px;">
+                                                GHC {{ product.sub_totaldisprice }} <span class="badge badge-danger">Saving {{ product.sub_totalsave }}</span>
+                                            </td>
+                                        {% else %}
+                                            <td class="cart__amount" >GHC {{ product.sub_totalprice }}</td>
+                                        {% endif %}
+                                    </tr> 
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td style="font-size:20px;"><b>Total: GHC {{ items.get_cart_total }}</b></td>
+                                </tr>
+                                <tf>
+                                    <td colspan="4">
+                                        <a href="{% url 'checkout' %}" class="btn btn-warning float-right ml-1 rounded-2">Checkout</a>
+                                        <a href="{% url 'store' %}" class="btn btn-black btn-outline-black float-right ml-1 rounded-1">Keep shopping</a>
+                                    </td>
+                                    
+                                </tf>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br>
+            
+        {% endif %}
+    </div>
+
+{% endblock %}
