@@ -52,7 +52,7 @@ def add_cart(request, slug):
             cart = Order.objects.create(user=request.user, created_on=created_on)
             cart.items.add(cart_item)
         
-        if request.methed == "POST":
+        if request.method == "POST":
             qty = request.POST.get('qty')
             size = request.POST.get('size')
             color = request.POST.get('color')

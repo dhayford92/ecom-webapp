@@ -1,4 +1,4 @@
-from authentication.serializers import LoginSerializer, ProfileSerializer, RegisterSerializer
+from api.serializers.auth_serializers import LoginSerializer, ProfileSerializer, RegisterSerializer
 from authentication.models import User, Profile
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response

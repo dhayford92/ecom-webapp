@@ -46,11 +46,12 @@ ORDER_STATUS = (
         ('Cancelled', 'Cancelled'),
         ('Confirmed', 'Comfirmed'),
         ('Delivered', 'Delivered'),
+        ('Refound', 'Refound'),
     )
 
 ORDER_TYPE = (
         ('Pickup', 'Pickup'),
-        ('Delivery', 'Delivery')
+        ('Delivery', 'Delivery'),
     )
 
 
