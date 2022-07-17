@@ -1,0 +1,65 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container" style="padding: 5rem 0;">
+        <div class="heading_container">
+            <h2>
+              Credit Card Payment
+            </h2>
+          </div>
+          <br>
+          {% include 'utils/_messages.html' %}
+          <div class="row">
+            <div class="col-lg-7"> 
+                <h3>Payment</h3>
+                <form action="." id="payment-form" method="POST">
+                    {% csrf_token %}
+                    <div id="stripe-ele"></div>
+                    <button class="stripebtn" id="submit">
+                      <div class="spinner hidden" id="spinner"></div>
+                      <span id="button-text">Pay now</span>
+                    </button>
+                    <p id="card-error" role="alert"></p>
+                    <p class="result-message hidden">
+                      Payment succeeded, see the result in your
+                      <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
+                    </p>
+                </form>
+            </div>
+            <div class="col-lg-5"> 
+                <h3>Order Items</h3> 
+                <ul class="list-group"> 
+                    {% for product in order.items.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ product.item.title }}
+                            {% if product.item.discount_price %}
+                                <span class="badge badge-primary badge-pill">Ghc {{ product.sub_totaldisprice }}</span>
+                            {% else %}
+                                <span class="badge badge-primary badge-pill">GHC {{ product.sub_totalprice }}</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    {% if order.coupon %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Promo code : {{ order.coupon.code }}
+                        <span class="badge badge-success badge-pill">Ghc -{{ order.coupon.discount }}</span>
+                    </li>
+                    {% endif %}
+                  </ul>
+                  <br>
+                  <ul class="list-group"> 
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <b>Total</b>
+                        <span class="badge badge-danger "><b>Ghc {{ order.get_cart_total }}</b></span>
+                    </li>
+                </ul>
+                  
+            </div>
+        </div>
+
+    </div>
+          </div>
+    </div>
+
+{% endblock %}
+

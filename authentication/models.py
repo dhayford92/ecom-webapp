@@ -1,5 +1,4 @@
 from django.db import models
-import jwt
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime, timedelta

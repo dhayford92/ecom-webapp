@@ -1,3 +1,4 @@
+from tokenize import Floatnumber
 from django.db import models
 from store.models import *
 from authentication.models import User
@@ -27,7 +28,7 @@ class CartItem(models.Model):
     def final_price(self):
         if self.item.discount_price > 0:
             return self.sub_totaldisprice()
-        return self.sub_totaldisprice()
+        return self.sub_totalsave()
 
 
 
@@ -65,6 +66,17 @@ class ShippingAddress(models.Model):
         return self.userID + " " + self.country + " " + self.city
 
 
+class PaymentModel(models.Model):
+    strip_id = models.CharField(max_length=100, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.FloatField()
+    timestanp = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.user.email
+
+
+
 class Order(models.Model):
     orderID = models.CharField(max_length=100, unique=True, db_index=True, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,6 +87,7 @@ class Order(models.Model):
     order_type = models.CharField(max_length=100, choices=ORDER_TYPE, default="Pickup")
     note = models.TextField(null=True, blank=True)
     shipaddress = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    payment = models.ForeignKey(PaymentModel, on_delete=models.SET_NULL, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     ordered = models.BooleanField(default=False)
@@ -82,13 +95,11 @@ class Order(models.Model):
     def __str__(self):
         return "Order ID :  %s" %(self.orderID)
 
-
     def get_cart_total(self):
         total = 0
-        for item in self.items.all():
-            total += item.final_price()
-            if self.coupon:
-                total -= self.coupon.discount
+        for orderitem in self.items.all():
+            total += orderitem.final_price() 
+            total -= self.coupon.discount
         return total
 
 
